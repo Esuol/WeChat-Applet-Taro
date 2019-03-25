@@ -6,6 +6,8 @@ import Index from './pages/index'
 
 import configStore from './store'
 
+import 'taro-ui/dist/style/index.scss'
+
 import './app.less'
 
 // 如果需要在 h5 环境中开启 React Devtools
@@ -34,7 +36,8 @@ class App extends Component {
       navigationBarBackgroundColor: '#fff',
       navigationBarTitleText: 'WeChat',
       navigationBarTextStyle: 'black'
-    }
+    },
+    plugins: {}
   }
 
   componentDidMount () {}
