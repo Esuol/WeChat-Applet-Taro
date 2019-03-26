@@ -4,20 +4,27 @@ import * as echarts from "./ec-canvas/echarts";
 
 function setChartData(chart, data) {
   let option = {
+    title: {
+        text: '折线图',
+        textStyle:{
+          fontSize: 14
+        }
+    },
     grid: {
       left: '12%',
-      right: '5%',
+      right: '7%',
       bottom: '15%'
     },
     xAxis : [
       {
+        name:'x',
         type: 'category',
         data: [],
         axisTick: {
           alignWithLabel: true
         },
         nameTextStyle: {
-          color: '#fff',
+          color: '#000',
           fontSize: 14
         },
         splitLine: {
@@ -25,16 +32,17 @@ function setChartData(chart, data) {
         },
         axisLine: {
           lineStyle: {
-            color: '#eee'
+            color: '#000'
           }
         }
       }
     ],
     yAxis : [
       {
+        name:'y',
         type : 'value',
         nameTextStyle: {
-          color: '#fff',
+          color: '#000',
           fontSize: 14
         },
         splitLine: {
@@ -42,12 +50,31 @@ function setChartData(chart, data) {
         },
         axisLine: {
           lineStyle: {
-            color: '#eee'
+            color: '#000'
           }
         }
       }
     ],
-    series : []
+    series : [
+     {
+      name: 'xx',
+      type: 'line',
+      lineStyle: {
+        normal:{
+          color: '#1E9C0D',
+          width: 3
+        }
+      }
+     }
+    ],
+    color:['#1E9C0D'],
+    tooltip: {
+        trigger: 'axis',
+        position: function (point, params, dom, rect, size) {
+          // 固定在顶部
+
+      }
+    },
   };
   if (data && data.dimensions && data.measures) {
     option.xAxis[0].data = data.dimensions.data

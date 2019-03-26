@@ -4,6 +4,12 @@ import * as echarts from "./ec-canvas/echarts";
 
 function setChartData(chart, data) {
   let option = {
+    title: {
+        text: '入店人数',
+        textStyle:{
+          fontSize: 14
+        }
+    },
     series : [
       {
         name: '访问来源',
@@ -17,9 +23,23 @@ function setChartData(chart, data) {
             shadowOffsetX: 0,
             shadowColor: 'rgba(0, 0, 0, 0.5)'
           }
-        }
+        },
+        label: {
+          normal: {
+              show: true,
+              textStyle: {
+                  color: '#000',
+                  fontSize: 14
+              }
+          }
+      },
       }
-    ]
+    ],
+    tooltip : {
+        trigger: 'item',
+        formatter: "{a}{b} : {c} ({d}%)"
+    },
+    color:['#1E9C0D','#4D98F4'],
   };
   chart.setOption(option);
 }

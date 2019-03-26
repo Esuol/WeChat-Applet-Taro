@@ -4,21 +4,28 @@ import * as echarts from './ec-canvas/echarts';
 
 function setChartData(chart, data) {
   let option = {
-    tooltip: {},
+    title: {
+        text: '直方图',
+        textStyle:{
+          fontSize: 14
+        }
+    },
+    series: [],
     grid: {
       left: '12%',
-      right: '5%',
+      right: '7%',
       bottom: '15%'
     },
     xAxis: [
       {
+        name: 'x',
         type: 'category',
         data: [],
         axisTick: {
           alignWithLabel: true
         },
         nameTextStyle: {
-          color: '#fff',
+          color: '#000',
           fontSize: 14
         },
         splitLine: {
@@ -26,33 +33,43 @@ function setChartData(chart, data) {
         },
         axisLine: {
           lineStyle: {
-            color: '#eee'
+            color: '#000'
           }
         }
       }
     ],
     yAxis: [
       {
+        name: 'y',
         type: 'value',
         nameTextStyle: {
-          color: '#fff',
+          color: '#000',
           fontSize: 14
         },
         axisLine: {
           lineStyle: {
-            color: '#eee'
+            color: '#000'
           }
         }
       }
     ],
-    series: []
+    color:['#1E9C0D']
   };
   if (data && data.dimensions && data.measures) {
     option.xAxis[0].data = data.dimensions.data;
     option.series = data.measures.map(item => {
       return {
         ...item,
-        type: 'bar'
+        type: 'bar',
+        name: 'value',
+        stack: '总量',
+        label: {
+            normal: {
+                show: true,
+                position: 'top',
+                color: '#1E9C0D',
+            }
+        }
       };
     });
   }
