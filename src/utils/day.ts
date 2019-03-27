@@ -2,9 +2,9 @@ let handleMonth:(month: number) => string =
     function(month:number): string {
       return month.toString().length === 1 ?  "0" + month : month.toString()
     }
-let getDay:(day:number) => string =
-    function(day:number): string {
-      let today = new Date()
+let getDay:(day:number,date:string) => string =
+    function(day:number,date:string): string {
+      let today = new Date(date)
       let currentTime: number = today.getTime() + 1000*60*60*24*day
 
       today.setTime(currentTime)
@@ -13,11 +13,11 @@ let getDay:(day:number) => string =
       let tDate: number = today.getDate()
       return handleMonth(tMonth + 1)+"/"+handleMonth(tDate);
     }
-let getDays:(day:number) => string[] =
-    function(day:number): string[] {
+let getDays:(day:number,date:string) => string[] =
+    function(day:number,date:string): string[] {
       let arr: string[] = []
       for(let i = day; i<0; i++){
-        arr.push(getDay(i))
+        arr.push(getDay(i,date))
       }
       return arr
     }

@@ -1,23 +1,24 @@
 import Taro, { Component } from "@tarojs/taro";
+
 import * as echarts from "./ec-canvas/echarts";
 // import "./ec-canvas/macarons"
 
 function setChartData(chart, data) {
   let option = {
     title: {
-        text: '折线图',
+        text: '近一周访问流量',
         textStyle:{
           fontSize: 14
         }
     },
     grid: {
       left: '12%',
-      right: '7%',
+      right: '6%',
       bottom: '15%'
     },
     xAxis : [
       {
-        name:'x',
+        name:'',
         type: 'category',
         data: [],
         axisTick: {
@@ -39,7 +40,7 @@ function setChartData(chart, data) {
     ],
     yAxis : [
       {
-        name:'y',
+        name:'人数(个)',
         type : 'value',
         nameTextStyle: {
           color: '#000',
@@ -120,11 +121,11 @@ export default class LineChart extends Component {
 
   render() {
     return (
-      <ec-canvas
-        ref={this.refChart}
-        canvas-id='mychart-area'
-        ec={this.state.ec}
-      />
+        <ec-canvas
+          ref={this.refChart}
+          canvas-id='mychart-area'
+          ec={this.state.ec}
+        />
     );
   }
 }

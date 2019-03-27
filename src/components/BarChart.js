@@ -5,7 +5,7 @@ import * as echarts from './ec-canvas/echarts';
 function setChartData(chart, data) {
   let option = {
     title: {
-        text: '直方图',
+        text: '客流量年龄分布',
         textStyle:{
           fontSize: 14
         }
@@ -13,12 +13,12 @@ function setChartData(chart, data) {
     series: [],
     grid: {
       left: '12%',
-      right: '7%',
-      bottom: '15%'
+      right: '6%',
+      bottom: '18%'
     },
     xAxis: [
       {
-        name: 'x',
+        name: '',
         type: 'category',
         data: [],
         axisTick: {
@@ -40,7 +40,7 @@ function setChartData(chart, data) {
     ],
     yAxis: [
       {
-        name: 'y',
+        name: '人数(个)',
         type: 'value',
         nameTextStyle: {
           color: '#000',

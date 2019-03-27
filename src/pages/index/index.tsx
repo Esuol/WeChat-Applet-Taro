@@ -1,12 +1,13 @@
 import { ComponentClass } from 'react';
 import Taro, { Component, Config } from '@tarojs/taro';
-import { View } from '@tarojs/components';
-import { AtActivityIndicator } from 'taro-ui'
+import { View, Picker, Canvas, CoverView } from '@tarojs/components';
+import { AtActivityIndicator } from 'taro-ui';
 import BarChart from '../../components/BarChart';
 import PieChart from '../../components/PieChart';
 import LineChart from '../../components/LineChart';
-import getDays from '../../utils/day'
-import {State} from '../../interface/charts'
+import getDays from '../../utils/day';
+import { State } from '../../interface/charts';
+import Tabbar from '../../components/tabbar';
 import './index.less';
 
 class Index extends Component {
@@ -14,14 +15,24 @@ class Index extends Component {
     navigationBarTitleText: '首页'
   };
 
-  state: State
+  state: State;
 
-  constructor () {
-    super(...arguments)
+  constructor() {
+    super(...arguments);
     this.state = {
       loadingPie: true,
-      loadingBar: true
-    }
+      loadingBar: true,
+      dateSelPie:
+        new Date().getFullYear() +
+        '-' +
+        (new Date().getMonth() + 1 < 10
+          ? '0' + (new Date().getMonth() + 1)
+          : new Date().getMonth() + 1) +
+        '-' +
+        (new Date().getDate() - 1 < 10
+          ? '0' + (new Date().getDate() - 1)
+          : new Date().getDate() - 1)
+    };
   }
 
   barChart: { refresh: any };
@@ -40,70 +51,83 @@ class Index extends Component {
 
   componentDidHide() {}
 
-  async componentDidMount() {
-    await this.getBarData()
-    await this.getPieData()
-    await this.getLineData()
-    this.setState({
-      loadingPie: false
-    })
-
-    this.setState({
-      loadingBar: false
-    })
+  componentDidMount() {
+    this.loading();
   }
 
-  async getBarData () {
-    console.log('bar')
+  loading() {
+    Promise.all([this.getBarData(), this.getPieData()]).then(() => {
+      this.setState({
+        loadingPie: false,
+        loadingBar: false
+      });
+      this.getLineData();
+    });
+  }
+
+  async getBarData() {
+    this.setState({
+      loadingBar: true
+    });
+
     const data = await Taro.request({
-      url: 'http://192.168.2.155:8086/faceInfo/classify'
-    })
-   if(data.data.code !== 'OK') {
-    Taro.showToast({
-      title: '请求超时',
-      icon: 'error',
-      duration: 1000
-    })
-    return
-   }
+      url: 'http://120.55.44.51:8086/faceInfo/classify',
+      data: {
+        date: this.state.dateSelPie
+      }
+    });
+    if (data.data.code !== 'OK') {
+      Taro.showToast({
+        title: '请求超时',
+        icon: 'error',
+        duration: 1000
+      });
+      return;
+    }
 
     const chartData = {
       dimensions: {
-        data: data.data.data.map(item => item[0] + '/' + item[1])
+        data: data.data.data.map(item => item[0] + '-' + item[1])
       },
       measures: [
         {
           data: data.data.data.map(item => item[2])
         }
       ]
-    }
+    };
     this.barChart.refresh(chartData);
   }
 
-  async getPieData () {
-    console.log('pie')
+  async getPieData() {
+    this.setState({
+      loadingPie: true
+    });
+
     const data = await Taro.request({
-      url: 'http://192.168.2.155:8086/faceInfo/sum'
-    })
-    if(data.data.code !== 'OK') {
+      url: 'http://120.55.44.51:8086/faceInfo/sum',
+      data: {
+        date: this.state.dateSelPie
+      }
+    });
+    if (data.data.code !== 'OK') {
       Taro.showToast({
         title: '请求超时',
         icon: 'error',
         duration: 1000
-      })
-      return
-     }
-     const chartDataPie = [
-        { value: data.data.data.maleNum, name: '男' },
-        { value: data.data.data.femaleNum, name: '女' }
-      ];
-      this.pieChart.refresh(chartDataPie);
+      });
+      return;
+    }
+    const chartDataPie = [
+      { value: data.data.data.maleNum, name: '男' },
+      { value: data.data.data.femaleNum, name: '女' }
+    ];
+    this.pieChart.refresh(chartDataPie);
   }
 
-  getLineData () {
+  getLineData() {
     const chartDataLine = {
       dimensions: {
-        data: getDays(-7)
+        data: getDays(-7, this.state.dateSelPie)
       },
       measures: [
         {
@@ -120,28 +144,53 @@ class Index extends Component {
 
   refLineChart = (node: any) => (this.lineChart = node);
 
+  onDateChangePie = e => {
+    this.setState(
+      {
+        dateSelPie: e.detail.value
+      },
+      () => {
+        this.loading();
+      }
+    );
+  };
+
   render() {
-
     return (
-         <View className='wrap'>
-              <View className='br'></View>
-              {(this.state.loadingPie)
-                 ? <AtActivityIndicator content='加载中...'></AtActivityIndicator>
-                 : ''
-              }
+      <View className='wrap'>
+        <View className='br' />
 
-              <View className='bar-chart'>
-                <BarChart ref={this.refBarChart} />
-              </View>
+        {this.state.loadingPie && this.state.loadingBar ? (
+          <AtActivityIndicator mode='center' content='加载中...' />
+        ) : (
+          ''
+        )}
+        <View className='pie-chart'>
+          {!this.state.loadingPie && !this.state.loadingBar ? (
+            <Picker
+              mode='date'
+              onChange={this.onDateChangePie}
+              className='date'
+              value={this.state.dateSelPie}
+            >
+              <View className='picker'>当前选择：{this.state.dateSelPie}</View>
+            </Picker>
+          ) : (
+            ''
+          )}
 
-              <View className='pie-chart'>
-                <PieChart ref={this.refPieChart} />
-              </View>
+          <PieChart ref={this.refPieChart} />
+        </View>
 
-              <View className='line-chart'>
-                <LineChart ref={this.refLineChart} />
-            </View>
-          </View>
+        <View className='bar-chart'>
+          <BarChart ref={this.refBarChart} />
+        </View>
+
+        <View className='line-chart'>
+          <LineChart ref={this.refLineChart} />
+        </View>
+        <Tabbar current={0} fixed={false} />
+      </View>
     );
   }
 }

@@ -24,12 +24,24 @@ export default class Index extends Component {
       errMsg: ''
     }
   }
+
+  componentWillMount () {
+    if(Taro.getStorageSync('username') === 'admin') {
+      Taro.redirectTo({
+        url: '/pages/index/index'
+      })
+      return
+    }
+  }
+
   onChangeUsername (value) {
     this.userName = value
   }
+
   onChangePassword (value) {
     this.password = value
   }
+
   onSubmit () {
     if(this.userName === '' || this.password === '') {
       this.setState({
@@ -52,6 +64,9 @@ export default class Index extends Component {
       isOpenMSg: false,
       loading: true
     })
+
+    Taro.setStorageSync('username', this.userName)
+
     Taro.navigateTo({
       url: '/pages/index/index'
     })

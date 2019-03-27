@@ -5,14 +5,16 @@ import * as echarts from "./ec-canvas/echarts";
 function setChartData(chart, data) {
   let option = {
     title: {
-        text: '入店人数',
+        text: `每天到店人数: ${data[0].value + data[1].value}`,
         textStyle:{
-          fontSize: 14
+          fontSize: 18,
+          fontWeight: 1800,
+          color: '#4D98F4',
         }
     },
     series : [
       {
-        name: '访问来源',
+        name: `访问来源`,
         type: 'pie',
         center: ['50%', '50%'],
         radius: [0, '60%'],

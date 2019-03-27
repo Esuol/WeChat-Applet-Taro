@@ -2,6 +2,7 @@ import '@tarojs/async-await'
 import Taro, { Component, Config } from '@tarojs/taro'
 import { Provider } from '@tarojs/redux'
 
+
 import Index from './pages/login/index'
 
 import configStore from './store'
@@ -17,7 +18,8 @@ class App extends Component {
   config: Config = {
     pages: [
       'pages/login/index',
-      'pages/index/index'
+      'pages/index/index',
+      'pages/personal/index'
     ],
     window: {
       backgroundTextStyle: 'light',
@@ -39,7 +41,7 @@ class App extends Component {
   componentDidCatchError () {}
 
   // 在 App 类中的 render() 函数没有实际作用
-  // 请勿修改此函数
+  // 请勿修改此
   render () {
     return (
       <Provider store={store}>
