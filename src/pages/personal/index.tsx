@@ -1,7 +1,7 @@
 import Taro, { Component, Config } from '@tarojs/taro'
 import { View } from '@tarojs/components';
-import {  AtButton , AtModal, AtModalHeader, AtModalContent, AtModalAction } from 'taro-ui'
-import Tabbar from '../../components/tabbar'
+import {  AtButton , AtModal } from 'taro-ui'
+import Tabbar from '@/components/tabbar'
 import './index.less'
 
 export default class Index extends Component {

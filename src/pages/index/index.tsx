@@ -1,13 +1,13 @@
 import { ComponentClass } from 'react';
 import Taro, { Component, Config } from '@tarojs/taro';
-import { View, Picker, Canvas, CoverView } from '@tarojs/components';
+import { View, Picker } from '@tarojs/components';
 import { AtActivityIndicator } from 'taro-ui';
-import BarChart from '../../components/BarChart';
-import PieChart from '../../components/PieChart';
-import LineChart from '../../components/LineChart';
-import getDays from '../../utils/day';
-import { State } from '../../interface/charts';
-import Tabbar from '../../components/tabbar';
+import BarChart from '@/components/BarChart';
+import PieChart from '@/components/PieChart';
+import LineChart from '@/components/LineChart';
+import getDays from '@/utils/day';
+import Tabbar from '@/components/tabbar';
+import { State } from '@/interface/charts';
 import './index.less';
 
 class Index extends Component {
@@ -71,7 +71,7 @@ class Index extends Component {
     });
 
     const data = await Taro.request({
-      url: 'http://120.55.44.51:8086/faceInfo/classify',
+      url:  API_GETWAY + 'faceInfo/classify',
       data: {
         date: this.state.dateSelPie
       }
@@ -104,7 +104,7 @@ class Index extends Component {
     });
 
     const data = await Taro.request({
-      url: 'http://120.55.44.51:8086/faceInfo/sum',
+      url: API_GETWAY + 'faceInfo/sum',
       data: {
         date: this.state.dateSelPie
       }
@@ -194,5 +194,6 @@ class Index extends Component {
     );
   }
 }
+
 
 export default Index as ComponentClass;

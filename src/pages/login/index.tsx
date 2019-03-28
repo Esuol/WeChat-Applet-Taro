@@ -2,8 +2,8 @@ import Taro, { Component, Config } from '@tarojs/taro'
 import { View, Text } from '@tarojs/components';
 import { AtForm, AtInput, AtButton, AtToast } from 'taro-ui'
 
+import {State} from '@/interface/login'
 import './index.less'
-import {State} from '../../interface/login'
 
 export default class Index extends Component {
   config: Config = {
@@ -43,7 +43,7 @@ export default class Index extends Component {
   }
 
   onSubmit () {
-    if(this.userName === '' || this.password === '') {
+    if(Object.is(this.userName,'') || Object.is(this.password,'')) {
       this.setState({
         isOpenMSg: true,
         errMsg: '请输入昵称或密码'
@@ -108,7 +108,7 @@ export default class Index extends Component {
           <AtButton type='primary' formType='submit' className="login">登录</AtButton>
         </AtForm>
 
-        <AtToast isOpened={this.state.isOpened} text="登录中" loading={this.state.loading} status="loading"></AtToast>
+        <AtToast isOpened={this.state.isOpened} text="登录中"  status="loading"></AtToast>
         <AtToast isOpened={this.state.isOpenMSg} text={this.state.errMsg}  duration={1000}></AtToast>
       </View>
 

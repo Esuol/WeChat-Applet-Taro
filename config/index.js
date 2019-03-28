@@ -1,3 +1,5 @@
+let path = require('path')
+
 const config = {
   projectName: 'YifengWeapp',
   date: '2019-3-25',
@@ -25,12 +27,18 @@ const config = {
     }
   },
   defineConstants: {
+    API_GETWAY:'http://120.55.44.51:8086/'
   },
   copy: {
     patterns: [
     ],
     options: {
     }
+  },
+  alias: {
+    '@/components': path.resolve(__dirname, '..', 'src/components'),
+    '@/utils': path.resolve(__dirname, '..', 'src/utils'),
+    '@/interface': path.resolve(__dirname, '..', 'src/interface'),
   },
   weapp: {
     module: {
