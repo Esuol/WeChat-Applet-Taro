@@ -3,6 +3,7 @@ import { View, Text } from '@tarojs/components';
 import { AtForm, AtInput, AtButton, AtToast } from 'taro-ui'
 
 import {State} from '@/interface/login'
+
 import './index.less'
 
 export default class Index extends Component {
