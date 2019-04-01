@@ -6,6 +6,7 @@ import BarChart from '@/components/BarChart';
 import PieChart from '@/components/PieChart';
 import LineChart from '@/components/LineChart';
 import getDays from '@/utils/day';
+import getday from '@/utils/getday';
 import Tabbar from '@/components/tabbar';
 import { State } from '@/interface/charts';
 import './index.less';
@@ -22,16 +23,7 @@ class Index extends Component {
     this.state = {
       loadingPie: true,
       loadingBar: true,
-      dateSelPie:
-        new Date().getFullYear() +
-        '-' +
-        (new Date().getMonth() + 1 < 10
-          ? '0' + (new Date().getMonth() + 1)
-          : new Date().getMonth() + 1) +
-        '-' +
-        (new Date().getDate() - 1 < 10
-          ? '0' + (new Date().getDate() - 1)
-          : new Date().getDate() - 1)
+      dateSelPie: getday(-1, '-')
     };
   }
 
@@ -127,7 +119,7 @@ class Index extends Component {
   getLineData() {
     const chartDataLine = {
       dimensions: {
-        data: getDays(-7, this.state.dateSelPie)
+        data: getDays(-7, getday(0,'-'))
       },
       measures: [
         {

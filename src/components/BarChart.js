@@ -20,6 +20,12 @@ function setChartData(chart, data) {
       {
         name: '',
         type: 'category',
+        axisLabel: {
+          show: true,
+          textStyle: {
+              fontSize:'9'
+          }
+        },
         data: [],
         axisTick: {
           alignWithLabel: true
@@ -42,6 +48,12 @@ function setChartData(chart, data) {
       {
         name: '人数(个)',
         type: 'value',
+        axisLabel: {
+          show: true,
+          textStyle: {
+              fontSize:'9'
+          }
+        },
         nameTextStyle: {
           color: '#000',
           fontSize: 14
