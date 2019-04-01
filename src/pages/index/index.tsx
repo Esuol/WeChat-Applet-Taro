@@ -23,6 +23,11 @@ class Index extends Component {
     this.state = {
       loadingPie: true,
       loadingBar: true,
+      bardata: {},
+      piedata: {},
+      linedate: {},
+      barloading: false,
+      pieloading: false,
       dateSelPie: getday(-1, '-')
     };
   }
@@ -34,7 +39,7 @@ class Index extends Component {
   lineChart: { refresh: any };
 
   componentWillReceiveProps(nextProps) {
-    console.log(this.props, nextProps);
+    // console.log(this.props, nextProps);
   }
 
   componentWillUnmount() {}
@@ -45,6 +50,8 @@ class Index extends Component {
 
   componentDidMount() {
     this.loading();
+    setInterval(() => {this.loading()}, 1000)
+
   }
 
   loading() {
@@ -58,9 +65,11 @@ class Index extends Component {
   }
 
   async getBarData() {
-    this.setState({
-      loadingBar: true
-    });
+    if(!this.state.barloading) {
+      this.setState({
+        loadingBar: true
+      });
+    }
 
     const data = await Taro.request({
       url:  API_GETWAY + 'faceInfo/classify',
@@ -86,14 +95,25 @@ class Index extends Component {
           data: data.data.data.map(item => item[2])
         }
       ]
-    };
-    this.barChart.refresh(chartData);
+    }
+
+    if(JSON.stringify(this.state.bardata) !== JSON.stringify(chartData)) {
+      this.setState({
+        bardata: chartData,
+        barloading: true
+      })
+      this.barChart.refresh(chartData);
+    }
+
   }
 
   async getPieData() {
-    this.setState({
-      loadingPie: true
-    });
+    if(!this.state.pieloading) {
+      this.setState({
+        loadingPie: true
+      });
+    }
+
 
     const data = await Taro.request({
       url: API_GETWAY + 'faceInfo/sum',
@@ -113,7 +133,17 @@ class Index extends Component {
       { value: data.data.data.maleNum, name: '男' },
       { value: data.data.data.femaleNum, name: '女' }
     ];
-    this.pieChart.refresh(chartDataPie);
+
+    if(JSON.stringify(this.state.piedata) !== JSON.stringify(chartDataPie)) {
+      this.setState({
+        piedata: chartDataPie,
+        pieloading: true
+      })
+      this.pieChart.refresh(chartDataPie);
+    }
+
+
+
   }
 
   getLineData() {
@@ -127,7 +157,14 @@ class Index extends Component {
         }
       ]
     };
-    this.lineChart.refresh(chartDataLine);
+
+    if(JSON.stringify(this.state.linedate) !== JSON.stringify(chartDataLine)) {
+      this.setState({
+        linedate: chartDataLine
+      })
+      this.lineChart.refresh(chartDataLine);
+    }
+
   }
 
   refBarChart = (node: any) => (this.barChart = node);
