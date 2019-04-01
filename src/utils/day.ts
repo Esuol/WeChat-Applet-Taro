@@ -5,7 +5,7 @@ let handleMonth:(month: number) => string =
 let getDay:(day:number,date:string) => string =
     function(day:number,date:string): string {
       let today = new Date(date)
-      let currentTime: number = today.getTime() 
+      let currentTime: number = today.getTime() + 1000*60*60*24*(day+1)
 
       today.setTime(currentTime)
       let tYear:number = today.getFullYear()
