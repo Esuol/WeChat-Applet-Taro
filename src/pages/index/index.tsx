@@ -119,7 +119,7 @@ class Index extends Component {
   getLineData() {
     const chartDataLine = {
       dimensions: {
-        data: getDays(-7, getday(0,'-'))
+        data: getDays(-7, this.state.dateSelPie)
       },
       measures: [
         {
