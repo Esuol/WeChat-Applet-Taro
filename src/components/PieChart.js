@@ -9,7 +9,7 @@ function setChartData(chart, data) {
         textStyle:{
           fontSize: 18,
           fontWeight: 1800,
-          color: '#4D98F4',
+          color: '#4D98F4'
         }
     },
     series : [
