@@ -83,6 +83,6 @@ export default class PieChart extends Component {
         canvas-id='mychart-area'
         ec={this.state.ec}
       />
-    );
+    )
   }
 }
