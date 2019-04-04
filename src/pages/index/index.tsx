@@ -50,7 +50,7 @@ class Index extends Component {
 
   componentDidMount() {
     this.loading();
-    setInterval(() => {this.loading()}, 1000)
+    setInterval(() => {this.loading()}, 2000)
 
   }
 

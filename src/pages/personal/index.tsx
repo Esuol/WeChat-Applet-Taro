@@ -50,7 +50,7 @@ export default class Index extends Component {
       duration: 1000
     }).then(() => {
       setTimeout(() => {
-        Taro.navigateTo({
+        Taro.redirectTo({
           url: '/pages/login/index'
         })
       }, 1000);

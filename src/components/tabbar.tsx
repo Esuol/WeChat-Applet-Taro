@@ -18,7 +18,7 @@ export default class Tabbar extends Taro.Component {
     this.setState({
       current: value
     },() => {
-      Taro.navigateTo({
+      Taro.redirectTo({
         url: this.state.current === 0 ? '/pages/index/index' : '/pages/personal/index'
       })
     })

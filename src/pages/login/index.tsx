@@ -68,7 +68,7 @@ export default class Index extends Component {
 
     Taro.setStorageSync('username', this.userName)
 
-    Taro.navigateTo({
+    Taro.redirectTo({
       url: '/pages/index/index'
     })
 
