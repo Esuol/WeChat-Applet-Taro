@@ -4,14 +4,9 @@ import * as echarts from './ec-canvas/echarts';
 
 function setChartData(chart, data) {
   let option = {
-    title: {
-        text: '客流量年龄分布',
-        textStyle:{
-          fontSize: 14
-        }
-    },
     series: [],
     grid: {
+      top: '5%',
       left: '12%',
       right: '6%',
       bottom: '18%'

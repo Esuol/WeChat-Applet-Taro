@@ -1,10 +1,11 @@
 import { ComponentClass } from 'react';
 import Taro, { Component, Config } from '@tarojs/taro';
-import { View, Picker } from '@tarojs/components';
+import { View, Picker, Text } from '@tarojs/components';
 import { AtActivityIndicator } from 'taro-ui';
 import BarChart from '@/components/BarChart';
 import PieChart from '@/components/PieChart';
 import LineChart from '@/components/LineChart';
+import TableList from '@/components/TableList'
 import getDays from '@/utils/day';
 import getday from '@/utils/getday';
 import Tabbar from '@/components/tabbar';
@@ -38,7 +39,7 @@ class Index extends Component {
 
   lineChart: { refresh: any };
 
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps() {
     // console.log(this.props, nextProps);
   }
 
@@ -51,7 +52,6 @@ class Index extends Component {
   componentDidMount() {
     this.loading();
     setInterval(() => {this.loading()}, 2000)
-
   }
 
   loading() {
@@ -104,7 +104,6 @@ class Index extends Component {
       })
       this.barChart.refresh(chartData);
     }
-
   }
 
   async getPieData() {
@@ -141,9 +140,6 @@ class Index extends Component {
       })
       this.pieChart.refresh(chartDataPie);
     }
-
-
-
   }
 
   getLineData() {
@@ -207,17 +203,20 @@ class Index extends Component {
           ) : (
             ''
           )}
-
+          <Text className='title'>每天到店人数: {this.state.piedata[0].value + this.state.piedata[1].value}</Text>
           <PieChart ref={this.refPieChart} />
         </View>
 
         <View className='bar-chart'>
+          <Text className='title'>客流量年龄分布</Text>
           <BarChart ref={this.refBarChart} />
         </View>
 
         <View className='line-chart'>
+          <Text className='title'>近一周访问流量</Text>
           <LineChart ref={this.refLineChart} />
         </View>
+        <TableList />
         <Tabbar current={0} fixed={false} />
       </View>
     );

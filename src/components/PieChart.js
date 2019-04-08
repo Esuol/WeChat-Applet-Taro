@@ -4,19 +4,19 @@ import * as echarts from "./ec-canvas/echarts";
 
 function setChartData(chart, data) {
   let option = {
-    title: {
-        text: `每天到店人数: ${data[0].value + data[1].value}`,
-        textStyle:{
-          fontSize: 18,
-          fontWeight: 1800,
-          color: '#4D98F4'
-        }
-    },
+    // title: {
+    //     text: `每天到店人数: ${data[0].value + data[1].value}`,
+    //     textStyle:{
+    //       fontSize: 18,
+    //       fontWeight: 1800,
+    //       color: '#6190E8'
+    //     }
+    // },
     series : [
       {
         name: `访问来源`,
         type: 'pie',
-        center: ['50%', '50%'],
+        center: ['50%', '40%'],
         radius: [0, '60%'],
         data: data,
         itemStyle: {

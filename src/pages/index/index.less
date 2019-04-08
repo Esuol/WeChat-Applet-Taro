@@ -1,13 +1,14 @@
 .wrap {
   height: 100vh;
   background-color: #fff;
+  color: #333;
 
   .br {
     height: 20px;
   }
 
   .bar-chart, .pie-chart, .line-chart {
-    width: 90%;
+    width: 100%;
     height: 33vh;
     margin: 0 auto 30px;
     border-radius: 20px;
@@ -16,12 +17,16 @@
     z-index:-1
   }
 
+  .picker {
+    color: #333;
+  }
+
   .bar-chart{
     height: 40vh;
   }
 
   .pie-chart{
-    height: 43vh;
+    height: 36vh;
     display: block;
   }
 
@@ -36,5 +41,14 @@
     color: #555;
     font-weight: 700;
     line-height: 40px
+  }
+
+  .title {
+    width: 100%;
+    font-size: 24px;
+    font-weight: bolder;
+    padding-left: 20px;
+    margin: 20px;
+    border-left: 5px solid #6190E8;
   }
 }

@@ -5,13 +5,8 @@ import * as echarts from "./ec-canvas/echarts";
 
 function setChartData(chart, data) {
   let option = {
-    title: {
-        text: '近一周访问流量',
-        textStyle:{
-          fontSize: 14
-        }
-    },
     grid: {
+      top: '5%',
       left: '12%',
       right: '6%',
       bottom: '15%'
