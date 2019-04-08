@@ -5,7 +5,7 @@ import { AtActivityIndicator } from 'taro-ui';
 import BarChart from '@/components/BarChart';
 import PieChart from '@/components/PieChart';
 import LineChart from '@/components/LineChart';
-import TableList from '@/components/TableList'
+import TableList from '@/components/TableList';
 import getDays from '@/utils/day';
 import getday from '@/utils/getday';
 import Tabbar from '@/components/tabbar';
@@ -27,9 +27,10 @@ class Index extends Component {
       bardata: {},
       piedata: {},
       linedate: {},
+      OutsiderList: {},
       barloading: false,
       pieloading: false,
-      dateSelPie: getday(-1, '-')
+      dateSel: getday(-1, '-')
     };
   }
 
@@ -51,11 +52,17 @@ class Index extends Component {
 
   componentDidMount() {
     this.loading();
-    setInterval(() => {this.loading()}, 2000)
+    this.getTableList(false);
+    setInterval(() => {
+      this.loading();
+    }, 2000);
   }
 
   loading() {
-    Promise.all([this.getBarData(), this.getPieData()]).then(() => {
+    Promise.all([
+      this.getBarData(),
+      this.getPieData()
+    ]).then(() => {
       this.setState({
         loadingPie: false,
         loadingBar: false
@@ -65,16 +72,16 @@ class Index extends Component {
   }
 
   async getBarData() {
-    if(!this.state.barloading) {
+    if (!this.state.barloading) {
       this.setState({
         loadingBar: true
       });
     }
 
     const data = await Taro.request({
-      url:  API_GETWAY + 'faceInfo/classify',
+      url: API_GETWAY + 'faceInfo/classify',
       data: {
-        date: this.state.dateSelPie
+        date: this.state.dateSel
       }
     });
     if (data.data.code !== 'OK') {
@@ -95,29 +102,28 @@ class Index extends Component {
           data: data.data.data.map(item => item[2])
         }
       ]
-    }
+    };
 
-    if(JSON.stringify(this.state.bardata) !== JSON.stringify(chartData)) {
+    if (JSON.stringify(this.state.bardata) !== JSON.stringify(chartData)) {
       this.setState({
         bardata: chartData,
         barloading: true
-      })
+      });
       this.barChart.refresh(chartData);
     }
   }
 
   async getPieData() {
-    if(!this.state.pieloading) {
+    if (!this.state.pieloading) {
       this.setState({
         loadingPie: true
       });
     }
 
-
     const data = await Taro.request({
       url: API_GETWAY + 'faceInfo/sum',
       data: {
-        date: this.state.dateSelPie
+        date: this.state.dateSel
       }
     });
     if (data.data.code !== 'OK') {
@@ -133,19 +139,52 @@ class Index extends Component {
       { value: data.data.data.femaleNum, name: '女' }
     ];
 
-    if(JSON.stringify(this.state.piedata) !== JSON.stringify(chartDataPie)) {
+    if (JSON.stringify(this.state.piedata) !== JSON.stringify(chartDataPie)) {
       this.setState({
         piedata: chartDataPie,
         pieloading: true
-      })
+      });
       this.pieChart.refresh(chartDataPie);
     }
+  }
+
+  async getTableList(val) {
+    console.log(val)
+
+    const TableListdata = await Taro.request({
+      url: API_GETWAY + 'faceInfo/page',
+      data: {
+        date: this.state.dateSel,
+        page: val?val.current:0,
+        size: 10
+      }
+    });
+
+    if (!this.state.pieloading) {
+      this.setState({
+        loadingPie: true
+      });
+    }
+
+    if (TableListdata.data.code !== 'OK') {
+      Taro.showToast({
+        title: '请求超时',
+        icon: 'error',
+        duration: 1000
+      });
+      return;
+    }
+
+    this.setState({
+      OutsiderList: TableListdata.data.data
+    });
+    console.log(TableListdata);
   }
 
   getLineData() {
     const chartDataLine = {
       dimensions: {
-        data: getDays(-7, this.state.dateSelPie)
+        data: getDays(-7, this.state.dateSel)
       },
       measures: [
         {
@@ -154,13 +193,12 @@ class Index extends Component {
       ]
     };
 
-    if(JSON.stringify(this.state.linedate) !== JSON.stringify(chartDataLine)) {
+    if (JSON.stringify(this.state.linedate) !== JSON.stringify(chartDataLine)) {
       this.setState({
         linedate: chartDataLine
-      })
+      });
       this.lineChart.refresh(chartDataLine);
     }
-
   }
 
   refBarChart = (node: any) => (this.barChart = node);
@@ -172,10 +210,11 @@ class Index extends Component {
   onDateChangePie = e => {
     this.setState(
       {
-        dateSelPie: e.detail.value
+        dateSel: e.detail.value
       },
       () => {
         this.loading();
+        this.getTableList(false);
       }
     );
   };
@@ -196,14 +235,17 @@ class Index extends Component {
               mode='date'
               onChange={this.onDateChangePie}
               className='date'
-              value={this.state.dateSelPie}
+              value={this.state.dateSel}
             >
-              <View className='picker'>当前选择：{this.state.dateSelPie}</View>
+              <View className='picker'>当前选择：{this.state.dateSel}</View>
             </Picker>
           ) : (
             ''
           )}
-          <Text className='title'>每天到店人数: {this.state.piedata[0].value + this.state.piedata[1].value}</Text>
+          <Text className='title'>
+            每天到店人数:{' '}
+            {this.state.piedata[0].value + this.state.piedata[1].value}
+          </Text>
           <PieChart ref={this.refPieChart} />
         </View>
 
@@ -212,16 +254,16 @@ class Index extends Component {
           <BarChart ref={this.refBarChart} />
         </View>
 
+        <TableList OutsiderList={this.state.OutsiderList} onPageChange={this.getTableList.bind(this)} />
+
         <View className='line-chart'>
           <Text className='title'>近一周访问流量</Text>
           <LineChart ref={this.refLineChart} />
         </View>
-        <TableList />
         <Tabbar current={0} fixed={false} />
       </View>
     );
   }
 }
-
 
 export default Index as ComponentClass;

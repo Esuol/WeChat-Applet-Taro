@@ -17,7 +17,7 @@ function setChartData(chart, data) {
         name: `访问来源`,
         type: 'pie',
         center: ['50%', '40%'],
-        radius: [0, '60%'],
+        radius: [0, '50%'],
         data: data,
         itemStyle: {
           emphasis: {

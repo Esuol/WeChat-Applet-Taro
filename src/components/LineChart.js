@@ -1,12 +1,11 @@
 import Taro, { Component } from "@tarojs/taro";
-
 import * as echarts from "./ec-canvas/echarts";
 // import "./ec-canvas/macarons"
 
 function setChartData(chart, data) {
   let option = {
     grid: {
-      top: '5%',
+      top: '15%',
       left: '12%',
       right: '6%',
       bottom: '15%'
@@ -76,13 +75,12 @@ function setChartData(chart, data) {
      }
     ],
     color:['#1E9C0D'],
-    tooltip: {
-        trigger: 'axis',
-        position: function (point, params, dom, rect, size) {
-          // 固定在顶部
-
-      }
-    },
+    // tooltip: {
+    //     trigger: 'axis',
+    //     position: function (point, params, dom, rect, size) {
+    //       // 固定在顶部
+    //   }
+    // },
   };
   if (data && data.dimensions && data.measures) {
     option.xAxis[0].data = data.dimensions.data

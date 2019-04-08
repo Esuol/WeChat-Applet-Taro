@@ -6,7 +6,7 @@ function setChartData(chart, data) {
   let option = {
     series: [],
     grid: {
-      top: '5%',
+      top: '15%',
       left: '12%',
       right: '6%',
       bottom: '18%'

@@ -1,53 +1,78 @@
 import Taro, { Component } from '@tarojs/taro';
-import { View, ScrollView, Text, Image } from '@tarojs/components';
+import { View, Text, Image } from '@tarojs/components';
 import { AtPagination } from 'taro-ui';
 import 'taro-ui/dist/style/components/flex.scss';
 import './index.less';
 
 export default class stayersTab extends Component {
   static defaultProps = {
-    OutsiderList: []
+    OutsiderList: {}
   };
 
+  constructor() {
+    this.state = {
+      bigImg: false
+    }
+  }
+
+  showImg(imgUrl, ifshow) {
+    console.log(111);
+
+    this.setState({
+      bigImg: ifshow,
+      imgUrl
+    });
+  }
+
   render() {
+    const { OutsiderList: {list} } = this.props;
     const { OutsiderList } = this.props;
 
-    const firstTableList = OutsiderList.map((item, index) => {
+    const firstTableList = list.map((item) => {
       return (
         <View key={item.id} className='List at-row at-row__align--center'>
-          <Text className='at-col at-col-6'>{index + 1}</Text>
+          <Text className='at-col at-col-2'>{item.id}</Text>
           <Image
             mode='widthFix'
-            className='at-col at-col-6'
-            style='padding: 10px;'
-            src={item}
+            className='at-col at-col-4'
+            style='padding:0 10px;width:90rpx;height:90rpx'
+            src={item.image}
+            // onClick={() => this.showImg(item.image, true)}
           />
+          <Text className='at-col at-col-2'>{item.age}</Text>
+          <Text className='at-col at-col-2'>{item.gender === 0 ? '女': '男'}</Text>
+          <Text className='at-col at-col-2'>{item.expression === 0 ? '中性表情' : (item.expression === 1?'微笑':'大笑')}</Text>
         </View>
       );
     });
 
     return (
       <View className='stayersTab'>
+        <Image
+          style={this.state.bigImg?'display:normal':'display:none'}
+          className='bigSize'
+          src={this.state.imgUrl}
+          onClick={() => this.showImg('', false)}
+        />
         <Text className='title'>流量统计列表</Text>
-        <ScrollView
+        {/* <ScrollView
           scrollY
           scrollWithAnimation
           style='height: 800rpx;background-color: #FAFBFC;'
-        >
-          <View className='Stayertable'>
-            <View className='tableTitle at-row'>
-              <Text className='at-col at-col-2'>序号</Text>
-              <Text className='at-col at-col-4'>图像</Text>
-              <Text className='at-col at-col-2'>年龄</Text>
-              <Text className='at-col at-col-2'>性别</Text>
-              <Text className='at-col at-col-2'>表情</Text>
-            </View>
-            {firstTableList}
+        > */}
+        <View className='Stayertable'>
+          <View className='tableTitle at-row'>
+            <Text className='at-col at-col-2'>ID</Text>
+            <Text className='at-col at-col-4'>图像</Text>
+            <Text className='at-col at-col-2'>年龄</Text>
+            <Text className='at-col at-col-2'>性别</Text>
+            <Text className='at-col at-col-2'>表情</Text>
           </View>
-        </ScrollView>
-
+          {list.length <= 1 ? <Text className='noData'>暂无数据</Text> : firstTableList}
+        </View>
+        {/* </ScrollView> */}
         <View className='margin20'>
-          <AtPagination total={50} pageSize={10} current={1} />
+          <AtPagination onPageChange={this.props.onPageChange} total={OutsiderList.total} pageSize={10} current={OutsiderList.pageNum} />
         </View>
       </View>
     );
