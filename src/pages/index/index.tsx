@@ -24,13 +24,14 @@ class Index extends Component {
     this.state = {
       loadingPie: true,
       loadingBar: true,
-      bardata: {},
-      piedata: {},
-      linedate: {},
+      bardata: [],
+      piedata: [],
+      linedate: [],
       OutsiderList: {},
       barloading: false,
       pieloading: false,
-      dateSel: getday(-1, '-')
+      dateSel: getday(-1, '-'),
+      modalShow: false
     };
   }
 
@@ -51,11 +52,11 @@ class Index extends Component {
   componentDidHide() {}
 
   componentDidMount() {
-    this.loading();
     this.getTableList(false);
+    this.loading();
     setInterval(() => {
       this.loading();
-    }, 2000);
+    }, 10000);
   }
 
   loading() {
@@ -134,6 +135,7 @@ class Index extends Component {
       });
       return;
     }
+
     const chartDataPie = [
       { value: data.data.data.maleNum, name: '男' },
       { value: data.data.data.femaleNum, name: '女' }
@@ -148,9 +150,7 @@ class Index extends Component {
     }
   }
 
-  async getTableList(val) {
-    console.log(val)
-
+  async getTableList(val:any) {
     const TableListdata = await Taro.request({
       url: API_GETWAY + 'faceInfo/page',
       data: {
@@ -158,7 +158,7 @@ class Index extends Component {
         page: val?val.current:0,
         size: 10
       }
-    });
+    })
 
     if (!this.state.pieloading) {
       this.setState({
@@ -177,8 +177,7 @@ class Index extends Component {
 
     this.setState({
       OutsiderList: TableListdata.data.data
-    });
-    console.log(TableListdata);
+    })
   }
 
   getLineData() {
@@ -201,6 +200,12 @@ class Index extends Component {
     }
   }
 
+  onShowModal (val:any) {
+    this.setState({
+      modalShow: val
+    });
+  }
+
   refBarChart = (node: any) => (this.barChart = node);
 
   refPieChart = (node: any) => (this.pieChart = node);
@@ -211,8 +216,7 @@ class Index extends Component {
     this.setState(
       {
         dateSel: e.detail.value
-      },
-      () => {
+      }, () => {
         this.loading();
         this.getTableList(false);
       }
@@ -221,7 +225,7 @@ class Index extends Component {
 
   render() {
     return (
-      <View className='wrap'>
+      <View className='wrap' >
         <View className='br' />
 
         {this.state.loadingPie && this.state.loadingBar ? (
@@ -229,7 +233,7 @@ class Index extends Component {
         ) : (
           ''
         )}
-        <View className='pie-chart'>
+        <View className='pie-chart'  style={this.state.modalShow === true?"display:none":"display:normal"}>
           {!this.state.loadingPie && !this.state.loadingBar ? (
             <Picker
               mode='date'
@@ -239,24 +243,25 @@ class Index extends Component {
             >
               <View className='picker'>当前选择：{this.state.dateSel}</View>
             </Picker>
-          ) : (
-            ''
-          )}
+          ) : ('')}
           <Text className='title'>
-            每天到店人数:{' '}
-            {this.state.piedata[0].value + this.state.piedata[1].value}
+            每天到店人数:
+            {this.state.piedata.length > 1 ?this.state.piedata[0].value + this.state.piedata[1].value: ''}
           </Text>
           <PieChart ref={this.refPieChart} />
         </View>
 
-        <View className='bar-chart'>
+        <View className='bar-chart'  style={this.state.modalShow === true?"display:none":"display:normal"}>
           <Text className='title'>客流量年龄分布</Text>
           <BarChart ref={this.refBarChart} />
         </View>
 
-        <TableList OutsiderList={this.state.OutsiderList} onPageChange={this.getTableList.bind(this)} />
+        <TableList
+          OutsiderList={this.state.OutsiderList}
+          onPageChange={this.getTableList.bind(this)}
+          onShowModal={this.onShowModal.bind(this)} />
 
-        <View className='line-chart'>
+        <View className='line-chart'  style={this.state.modalShow === true?"display:none":"display:normal"}>
           <Text className='title'>近一周访问流量</Text>
           <LineChart ref={this.refLineChart} />
         </View>

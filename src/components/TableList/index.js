@@ -6,17 +6,20 @@ import './index.less';
 
 export default class stayersTab extends Component {
   static defaultProps = {
-    OutsiderList: {}
+    OutsiderList: {},
+    onShowModal: () => {},
+    onPageChange: () => {}
   };
 
   constructor() {
     this.state = {
-      bigImg: false
+      bigImg: false,
+      imgUrl: ''
     }
   }
 
   showImg(imgUrl, ifshow) {
-    console.log(111);
+    this.props.onShowModal(ifshow)
 
     this.setState({
       bigImg: ifshow,
@@ -28,6 +31,8 @@ export default class stayersTab extends Component {
     const { OutsiderList: {list} } = this.props;
     const { OutsiderList } = this.props;
 
+    if(!list) return
+
     const firstTableList = list.map((item) => {
       return (
         <View key={item.id} className='List at-row at-row__align--center'>
@@ -37,7 +42,7 @@ export default class stayersTab extends Component {
             className='at-col at-col-4'
             style='padding:0 10px;width:90rpx;height:90rpx'
             src={item.image}
-            // onClick={() => this.showImg(item.image, true)}
+            onClick={() => this.showImg(item.image, true)}
           />
           <Text className='at-col at-col-2'>{item.age}</Text>
           <Text className='at-col at-col-2'>{item.gender === 0 ? '女': '男'}</Text>
@@ -72,7 +77,12 @@ export default class stayersTab extends Component {
         </View>
         {/* </ScrollView> */}
         <View className='margin20'>
-          <AtPagination onPageChange={this.props.onPageChange} total={OutsiderList.total} pageSize={10} current={OutsiderList.pageNum} />
+          <AtPagination
+            onPageChange={this.props.onPageChange}
+            total={OutsiderList.total}
+            pageSize={10}
+            current={OutsiderList.pageNum}
+          />
         </View>
       </View>
     );

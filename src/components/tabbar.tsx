@@ -1,9 +1,12 @@
 import Taro from "@tarojs/taro";
 import { AtTabBar } from 'taro-ui'
 
-import './index.less'
-
 export default class Tabbar extends Taro.Component {
+  defaultProps = {
+    current: 1,
+    fixed: false
+  }
+
   state: {
     current:number
   }
