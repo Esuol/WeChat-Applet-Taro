@@ -162,12 +162,6 @@ class Index extends Component {
         }
       })
 
-      if (!this.state.pieloading) {
-        this.setState({
-          loadingPie: true
-        });
-      }
-
       if (TableListdata.data.code !== 'OK') {
         Taro.showToast({
           title: '请求超时',
