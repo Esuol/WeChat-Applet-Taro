@@ -28,6 +28,7 @@ class Index extends Component {
       piedata: [],
       linedate: [],
       OutsiderList: {},
+      pageNum:0,
       barloading: false,
       pieloading: false,
       dateSel: getday(-1, '-'),
@@ -52,7 +53,6 @@ class Index extends Component {
   componentDidHide() {}
 
   componentDidMount() {
-    this.getTableList(false);
     this.loading();
     setInterval(() => {
       this.loading();
@@ -62,7 +62,8 @@ class Index extends Component {
   loading() {
     Promise.all([
       this.getBarData(),
-      this.getPieData()
+      this.getPieData(),
+      this.getTableList(false)
     ]).then(() => {
       this.setState({
         loadingPie: false,
@@ -151,33 +152,44 @@ class Index extends Component {
   }
 
   async getTableList(val:any) {
-    const TableListdata = await Taro.request({
-      url: API_GETWAY + 'faceInfo/page',
-      data: {
-        date: this.state.dateSel,
-        page: val?val.current:0,
-        size: 10
+    const getData = async () => {
+      const TableListdata = await Taro.request({
+        url: API_GETWAY + 'faceInfo/page',
+        data: {
+          date: this.state.dateSel,
+          page: this.state.pageNum,
+          size: 10
+        }
+      })
+
+      if (!this.state.pieloading) {
+        this.setState({
+          loadingPie: true
+        });
       }
-    })
 
-    if (!this.state.pieloading) {
+      if (TableListdata.data.code !== 'OK') {
+        Taro.showToast({
+          title: '请求超时',
+          icon: 'error',
+          duration: 1000
+        });
+        return;
+      }
+
       this.setState({
-        loadingPie: true
-      });
+        OutsiderList: TableListdata.data.data
+      })
     }
 
-    if (TableListdata.data.code !== 'OK') {
-      Taro.showToast({
-        title: '请求超时',
-        icon: 'error',
-        duration: 1000
-      });
-      return;
+    if(val) {
+      this.setState({
+        pageNum: val.current
+      }, () => getData()
+      )
+    }else {
+      getData()
     }
-
-    this.setState({
-      OutsiderList: TableListdata.data.data
-    })
   }
 
   getLineData() {
