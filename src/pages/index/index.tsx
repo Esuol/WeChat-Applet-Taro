@@ -61,12 +61,13 @@ class Index extends Component {
     }, 10000);
   }
 
-  onPullDownRefresh () {
-    this.setState({
+  async onPullDownRefresh () {
+    await this.setState({
       refreshLoading: true,
       refreshMessage: '刷新中...'
     })
-    this.loading()
+
+    await this.loading()
 
     Taro.stopPullDownRefresh()//停止下拉动作过渡
 
@@ -77,12 +78,16 @@ class Index extends Component {
       clearTimeout(timerA)
     },1500)
 
+
+
     let timerB = setTimeout (() => {
       this.setState({
         refreshLoading: false
       })
       clearTimeout(timerB)
     },1600)
+
+
 
   }
 

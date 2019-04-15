@@ -22,8 +22,7 @@ class App extends Component {
       navigationBarBackgroundColor: '#38393e',
       navigationBarTitleText: 'WeChat',
       navigationBarTextStyle: 'white',
-      enablePullDownRefresh: true,
-      onReachBottomDistance:60
+      enablePullDownRefresh: true
     },
     plugins: {}
 
