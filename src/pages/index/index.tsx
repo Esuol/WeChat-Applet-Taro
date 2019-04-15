@@ -32,7 +32,9 @@ class Index extends Component {
       barloading: false,
       pieloading: false,
       dateSel: getday(-1, '-'),
-      modalShow: false
+      modalShow: false,
+      refreshLoading: false,
+      refreshMessage: '刷新中...'
     };
   }
 
@@ -58,6 +60,32 @@ class Index extends Component {
       this.loading();
     }, 10000);
   }
+
+  onPullDownRefresh () {
+    this.setState({
+      refreshLoading: true,
+      refreshMessage: '刷新中...'
+    })
+    this.loading()
+
+    Taro.stopPullDownRefresh()//停止下拉动作过渡
+
+    let timerA = setTimeout (() => {
+      this.setState({
+        refreshMessage: '刷新成功'
+      })
+      clearTimeout(timerA)
+    },1500)
+
+    let timerB = setTimeout (() => {
+      this.setState({
+        refreshLoading: false
+      })
+      clearTimeout(timerB)
+    },1600)
+
+  }
+
 
   loading() {
     Promise.all([
@@ -233,7 +261,11 @@ class Index extends Component {
     return (
       <View className='wrap' >
         <View className='br' />
-
+        {this.state.refreshLoading ? (
+           <AtActivityIndicator  content={this.state.refreshMessage}  className="loading" />
+        ) : (
+          ''
+        )}
         {this.state.loadingPie && this.state.loadingBar ? (
           <AtActivityIndicator mode='center' content='加载中...' />
         ) : (
